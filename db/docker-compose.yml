@@ -2,24 +2,23 @@ version: '3'
 
 services:
   ibm_server:
-    container_name: ibm_db
+    container_name: ibm_server
     image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      PGDATA: /data/ibm_db
+      PGDATA: /data/ibm_server
     volumes:
-      - im_db:/data/ibm_db
+      - ibm_server:/data/ibm_server
     ports:
       - '5432:5432'
     networks:
-      - ibm_db_net
+      - ibm_server_net
     restart: unless-stopped
 
 networks:
-  inventory_app_net:
+  ibm_server_net:
     driver: bridge
 
 volumes:
-  inventory_app:
-
+  ibm_server:
