@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v8kx_jodd!b_+h*9a-o$a3si&=zf7oikxh)g(g-q2n7ch0em3!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'user_control.CustomUser'
@@ -79,8 +79,9 @@ WSGI_APPLICATION = 'ibm_server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+if DEBUG:
+    DATABASES = {
+        'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'NAME': config('DB_NAME'),
             'USER': config('DB_USER'),
@@ -88,7 +89,18 @@ DATABASES = {
             'HOST': config('DB_HOST'),
             'PORT': config('DB_PORT'),
         }
-}
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'ibm_server',
+            'USER': 'juangmalta',
+            'PASSWORD': 'Jp.092302',
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
 
 
 # Password validation
