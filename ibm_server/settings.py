@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-v8kx_jodd!b_+h*9a-o$a3si&=zf7oikxh)g(g-q2n7ch0em3!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'user_control.CustomUser'
@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'user_control',
-    'corsheaders'
+    'corsheaders',
+    'app_control',
 
 ]
 
@@ -62,9 +63,9 @@ CORS_ALLOWED_ORIGINS = [
     "https://domain.com",
     "https://api.domain.com",
     "http://localhost:8080",
-    "http://127.0.0.1:9000"
+    "http://127.0.0.1:9000",
     "http://localhost:5173",
-    '*',
+   
 ]
 CORS_ALLOW_METHODS = [
 'DELETE',
