@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .serializers import (
     CreateUserSerializer, CustomUser, LoginSerializer, UpdatePasswordSerializer,
-    CustomUserSerializer
+    CustomUserSerializer, UserActivitiesSerializer, UserActivities
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -12,7 +12,15 @@ from ibm_server.custom_methods import IsAuthenticatedCustom
 
 
 
-
+def add_user_activity(user, action):
+    if not user:
+        return
+    UserActivities.objects.create(
+        user_id=user.id,
+        email=user.email,
+        fullname=user.fullname,
+        action=action
+    )
 class CreateUserView(ModelViewSet):
     http_method_names = ["post"]
     queryset = CustomUser.objects.all()
