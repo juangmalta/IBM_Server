@@ -87,5 +87,5 @@ class InventoryCSVLoaderView(ModelViewSet):
         data_validation.is_valid(raise_exception=True)
         data_validation.save()
 
-        return Response({"success": "Inventory items added successfully"})
+        return Response({"success": "Certification items added successfully"})
 
