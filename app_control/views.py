@@ -48,7 +48,7 @@ class certificacionView(ModelViewSet):
         return super().create(request, *args, **kwargs)
     
 
-class InventoryCSVLoaderView(ModelViewSet):
+class CertificationsCSVLoaderView(ModelViewSet):
     http_method_names = ('post',)
     queryset = certificacionView.queryset
     permission_classes = (IsAuthenticatedCustom,)
