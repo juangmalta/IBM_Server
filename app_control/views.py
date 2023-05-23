@@ -47,29 +47,45 @@ class certificacionView(ModelViewSet):
         
         return super().create(request, *args, **kwargs)
     
-class excelImportView(APIView):
-    parser_classes = [MultiPartParser]
 
-    def post(self, request, *args, **kwargs):
-        file = request.FILES['file']  # Nombre del campo en el formulario de la solicitud
+class InventoryCSVLoaderView(ModelViewSet):
+    http_method_names = ('post',)
+    queryset = certificacionView.queryset
+    permission_classes = (IsAuthenticatedCustom,)
+    serializer_class = CertificacionesSerializer
 
-        # Leer el archivo de Excel utilizando pandas
-        df = pd.read_excel(file)
+    def create(self, request, *args, **kwargs):
+        try:
+            data = request.FILES['data']
+        except Exception as e:
+            raise Exception("You need to provide certifications CSV 'data'")
 
-        # Realiza las operaciones necesarias con los datos del archivo
-        for _, row in df.iterrows():
-        # Create an instance of Certificaciones and populate it with data from the Excel row
-            instance = Certificaciones(
-                uid=row['uid'],
-                org=row['org'],
-                work_location=row['work_location'],
-                certifications=row['certification'],
-                issue_date=row['issue_date'],
-                type=row['type'],
-            )
+        certification_items = []
 
-        # Save the instance to the database
-        instance.save()
+        try:
+            csv_reader = csv.reader(codecs.iterdecode(data, 'utf-8'))
+            for row in csv_reader:
+                if not row[0]:
+                    continue
+                certification_items.append(
+                    {
+                        "uid": row[0],
+                        "org": row[1],
+                        "work_location": row[2],
+                        "certifications": row[3],
+                        "issue_date": row[4],
+                        "type": row[5],
+                    }
+                )
+        except csv.Error as e:
+            raise Exception(e)
 
-        # Devuelve una respuesta apropiada
-        return Response("Archivo de Excel importado correctamente.")
+        if not certification_items:
+            raise Exception("CSV file cannot be empty")
+
+        data_validation = self.serializer_class(data=certification_items, many=True)
+        data_validation.is_valid(raise_exception=True)
+        data_validation.save()
+
+        return Response({"success": "Inventory items added successfully"})
+
