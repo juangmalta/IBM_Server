@@ -7,6 +7,7 @@ from .serializers import (
     CertificacionesSerializer, Certificaciones
 )
 from rest_framework.response import Response
+from datetime import datetime
 from ibm_server.custom_methods import IsAuthenticatedCustom
 from ibm_server.utils import CustomPagination, get_query
 from django.db.models import Count, Sum, F
@@ -67,14 +68,29 @@ class CertificationsCSVLoaderView(ModelViewSet):
             for row in csv_reader:
                 if not row[0]:
                     continue
+                    
+                # Check for empty values in other fields
+                uid = row[0] or None
+                org = row[1] or None
+                work_location = row[2] or None
+                certification = row[3] or None
+                issue_date_str = row[4]  or None# Assuming the date is in string format
+
+                # Convert the date format to YYYY-MM-DD
+                if issue_date_str:
+                    issue_date = datetime.strptime(issue_date_str, "%d/%m/%y").strftime("%Y-%m-%d")
+                else:
+                    issue_date = None
+
+                type = row[5] or None
                 certification_items.append(
                     {
-                        "uid": row[0],
-                        "org": row[1],
-                        "work_location": row[2],
-                        "certifications": row[3],
-                        "issue_date": row[4],
-                        "type": row[5],
+                        "uid": uid,
+                        "org": org,
+                        "work_location": work_location,
+                        "certification": certification,
+                        "issue_date": issue_date,
+                        "type": type,
                     }
                 )
         except csv.Error as e:
