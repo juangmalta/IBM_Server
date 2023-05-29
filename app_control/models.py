@@ -7,7 +7,7 @@ class Certificaciones(models.Model):
     org = models.CharField(max_length=100)
     work_location = models.CharField(max_length=100)
     certifications = models.CharField(max_length=100)
-    issue_date = models.DateField()
+    issue_date = models.DateField(null=True, blank=True)
     type = models.CharField(max_length=100)
     
     
