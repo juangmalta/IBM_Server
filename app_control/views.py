@@ -78,7 +78,7 @@ class CertificationsCSVLoaderView(ModelViewSet):
 
                 # Convert the date format to YYYY-MM-DD
                 if issue_date_str:
-                    issue_date = datetime.strptime(issue_date_str, "%m/%d/%Y").strftime("%Y-%m-%d")
+                    issue_date = datetime.strptime(issue_date_str, "%d/%m/%y").strftime("%Y-%m-%d")
                 else:
                     issue_date = None
 
