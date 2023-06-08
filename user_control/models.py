@@ -3,7 +3,7 @@ from django.contrib.auth.models import (
     AbstractBaseUser, PermissionsMixin, BaseUserManager
 )
 
-Roles = (("admin", "admin"), ("creator", "creator"), ("sale", "sale"))
+Roles = (("admin", "admin"), ("user", "user"))
 
 
 class CustomUserManager(BaseUserManager):
@@ -41,6 +41,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     last_login = models.DateTimeField(null=True)
 
     USERNAME_FIELD = "email"
+    
     objects = CustomUserManager()
 
     def __str__(self):

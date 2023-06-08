@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from datetime import datetime
 from ibm_server.utils import CustomPagination, get_access_token, get_query
 from ibm_server.custom_methods import IsAuthenticatedCustom
+from django.contrib.auth.hashers import make_password
 
 
 
@@ -21,6 +22,8 @@ def add_user_activity(user, action):
         fullname=user.fullname,
         action=action
     )
+from django.contrib.auth.hashers import make_password
+
 class CreateUserView(ModelViewSet):
     http_method_names = ["post"]
     queryset = CustomUser.objects.all()
@@ -31,9 +34,11 @@ class CreateUserView(ModelViewSet):
         valid_request = self.serializer_class(data=request.data)
         valid_request.is_valid(raise_exception=True)
 
-        CustomUser.objects.create(**valid_request.validated_data)
+        # Hash the password before saving
+        password = valid_request.validated_data.pop('password')
+        hashed_password = make_password(password)
 
-        
+        user = CustomUser.objects.create(password=hashed_password, **valid_request.validated_data)
 
         return Response(
             {"success": "User created successfully"},
@@ -126,7 +131,7 @@ class MeView(ModelViewSet):
 
 class UsersView(ModelViewSet):
     serializer_class = CustomUserSerializer
-    http_method_names = ["get"]
+    http_method_names = ["get","put","delete"]
     queryset = CustomUser.objects.all()
     permission_classes = (IsAuthenticatedCustom, )
     pagination_class = CustomPagination
